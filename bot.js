@@ -2,15 +2,6 @@ const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
-
 const app = express();
 const PORT = process.env.WEBHOOK_PORT || 3000;
 app.use(bodyParser.json());
