@@ -44,7 +44,10 @@ client.once('ready', () => {
             .setTitle("Middleman")
             .setDescription("• **In need of a middleman?** Follow our [**TOS**](https://discord.com/termsjj) \n • You're **required** to vouch the middleman after the trade. If you fail to do this within **24 hours**, you will be **banned** from using our services\n • Creating a **troll/time-wasting ticket** will result in a middleman ban\n • We are **NOT** responsible for anything that happens after the trade is done. As well as any **duped** items.")
             .setImage("https://media.discordapp.net/attachments/1332606183722188882/1332761976777998367/image.png?ex=67b17590&is=67b02410&hm=669fc5542ee090996d8c9dc5e55b7e89336e0235722c54b82c132b40a20fdfb4&format=webp&quality=lossless&width=470&height=123&")
-            .setFooter({ text: "Powered by ticketsbot.net, iconURL: client.user.displayAvatarURL()});
+            .setFooter({
+              text: "Powered by ticketsbot.net",
+              iconURL: client.user.displayAvatarURL(),
+            });
 
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('middleman_menu')
