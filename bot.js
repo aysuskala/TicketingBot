@@ -40,22 +40,22 @@ client.once('ready', () => {
     const channel = client.channels.cache.get(MIDDLEMAN_CHANNEL_ID);
     if (channel) {
         const embed = new EmbedBuilder()
-            .setColor(0x0099ff)
-            .setTitle('Middleman & Reports')
-            .setDescription('Select an option below to continue.');
+            .setColor(0x00AE86)
+            .setTitle("Middleman")
+            .setDescription("• **In need of a middleman?** Follow our [**TOS**](https://discord.com/termsjj) \n • You're **required** to vouch the middleman after the trade. If you fail to do this within **24 hours**, you will be **banned** from using our services\n • Creating a **troll/time-wasting ticket** will result in a middleman ban\n • We are **NOT** responsible for anything that happens after the trade is done. As well as any **duped** items.")
+            .setImage("https://media.discordapp.net/attachments/1332606183722188882/1332761976777998367/image.png?ex=67b17590&is=67b02410&hm=669fc5542ee090996d8c9dc5e55b7e89336e0235722c54b82c132b40a20fdfb4&format=webp&quality=lossless&width=470&height=123&")
+            .setFooter({ text: "Powered by ticketsbot.net, iconURL: client.user.displayAvatarURL()});
 
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('middleman_menu')
-            .setPlaceholder('Choose an option...')
+            .setPlaceholder('Select a topic...')
             .addOptions([
                 {
-                    label: 'Middleman',
-                    description: 'Request a middleman for your trade.',
+                    label: '🍰 Middleman',
                     value: 'middleman_request',
                 },
                 {
-                    label: 'Report',
-                    description: 'Report a user or issue.',
+                    label: '🍰 Report',
                     value: 'report_issue',
                 }
             ]);
@@ -82,17 +82,20 @@ client.on('interactionCreate', async (interaction) => {
             const devIdInput = new TextInputBuilder()
                 .setCustomId('dev_id')
                 .setLabel('Input Dev ID or Tag')
-                .setStyle(TextInputStyle.Short);
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false); // Removes red asterisk
 
             const privateServerInput = new TextInputBuilder()
                 .setCustomId('private_server')
                 .setLabel('Can you join a private server?')
-                .setStyle(TextInputStyle.Short);
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false);
 
             const tradeInfoInput = new TextInputBuilder()
                 .setCustomId('trade_info')
                 .setLabel('What is the trade?')
-                .setStyle(TextInputStyle.Paragraph);
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(false);
 
             const firstRow = new ActionRowBuilder().addComponents(devIdInput);
             const secondRow = new ActionRowBuilder().addComponents(privateServerInput);
@@ -100,13 +103,14 @@ client.on('interactionCreate', async (interaction) => {
 
             modal.addComponents(firstRow, secondRow, thirdRow);
 
-            await interaction.showModal(modal);
+            await interaction.showModal(modal).catch(console.error);
         } else if (interaction.values[0] === 'report_issue') {
-            // Reply with a permission error
+            // Reply with an ephemeral error message
             await interaction.reply({ content: "You don't have permission to report issues.", ephemeral: true });
         }
     }
 });
+
 
 // Login to Discord
 client.login(process.env.DISCORD_TOKEN);
