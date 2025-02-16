@@ -4,18 +4,19 @@ const PORT = process.env.WEBHOOK_PORT || 3000;
 
 // Handle GET request from TicketsBot
 app.get('/ticketsbot-webhook', (req, res) => {
-    const userId = req.query.discord; // Extract user ID from request
+    console.log('Incoming webhook:', req.query);
 
-    if (!userId) {
+    // Check if TicketsBot sent a user ID
+    if (!req.query.user_id) {
+        console.error('❌ Missing user_id parameter in webhook request');
         return res.status(400).json({ error: 'Missing user_id parameter' });
     }
 
-    // Respond with JSON (Modify this if needed)
-    res.json({
-        success: true,
-        message: `Received request for user ID: ${userId}`,
-        assigned_staff: "None (Auto-assignment in progress)"
-    });
+    // Log the received user ID
+    console.log(`✅ Received user_id: ${req.query.user_id}`);
+
+    // Respond with success (TicketsBot expects a JSON response)
+    res.json({ message: 'Webhook received successfully', user_id: req.query.user_id });
 });
 
 // Start the server
