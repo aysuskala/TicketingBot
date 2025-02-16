@@ -12,6 +12,8 @@ const client = new Client({
   ],
 });
 
+const PORT = process.env.WEBHOOK_PORT || 3000;
+
 const app = express();
 const PORT = process.env.WEBHOOK_PORT || 3000;
 app.use(bodyParser.json());
@@ -20,29 +22,19 @@ const STAFF_ROLE_ID = "YOUR_STAFF_ROLE_ID"; // Replace with the staff role ID
 const TICKETS_CHANNEL_ID = "YOUR_TICKETS_CHANNEL_ID"; // Replace with ticket logs channel ID
 
 // Webhook endpoint to handle TicketsBot events
-app.post("/ticketsbot-webhook", async (req, res) => {
-  const { event, ticket, user } = req.body;
-  if (!event || !ticket) return res.status(400).send("Invalid payload");
+app.get('/ticketsbot-webhook', (req, res) => {
+    const userId = req.query.discord; // Extract user ID from request
 
-  if (event === "ticket_created") {
-    const guild = client.guilds.cache.get(ticket.guild_id);
-    if (!guild) return res.status(500).send("Guild not found");
-
-    const onlineStaff = guild.members.cache
-      .filter(
-        (member) =>
-          member.roles.cache.has(STAFF_ROLE_ID) &&
-          member.presence?.status !== "offline"
-      )
-      .first();
-
-    if (onlineStaff) {
-      // Automatically claim the ticket (TicketsBot API request required here)
-      await mentionAssignedStaff(ticket.channel_id, onlineStaff.user.id);
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing user_id parameter' });
     }
-  }
 
-  res.send("Webhook received");
+    // Respond with JSON (Modify this if needed)
+    res.json({
+        success: true,
+        message: `Received request for user ID: ${userId}`,
+        assigned_staff: "None (Auto-assignment in progress)"
+    });
 });
 
 async function mentionAssignedStaff(ticketChannelId, staffMemberId) {
